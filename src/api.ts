@@ -30,11 +30,12 @@ export default class API {
 
         return new Promise<any>((resolve, reject) => {
             http.get(requestOptions, (err, res, body) => {
-                body = JSON.parse(body)
+                if (body) {
+                    body = JSON.parse(body)
+                }
 
                 if (err) {
-                    console.log('Error')
-                    reject({error: err})
+                    reject({error: err.message})
                 } else if (!body.metadata?.result) {
                     reject({error: body.metadata.reason})
                 } else {

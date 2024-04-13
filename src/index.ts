@@ -7,15 +7,32 @@ const client = new Client({
     username: 'easymail',
 })
 
-client.getAccount('codemax.com.br').then(result => {
+// client.listPackages().then(result => {
+//    console.log(result)
+// })
+
+client.getPackage('Essencial').then(result => {
     console.log(result)
 })
 
-//client.listAccounts().then(result => {
-//    console.log(result)
+// var plan = {
+//     name: 'Teste',
+//     quota: '1000',
+//     bwlimit: 'unlimited'
+// }
+// client.updatePackage(plan).then(result => {
+//     console.log(result)
+// })
+
+//client.checkConnection().then(result => {
+//    console.log('success', result)
 //})
 
-//client.terminateAccount('codemax').then(result => {
+//client.listAccounts().then(result => {
+//   console.log(result)
+//})
+
+//client.unsuspendAccount('codemax').then(result => {
 //    console.log(result)
 //}).catch(err => {
 //    console.log('Erro', err)

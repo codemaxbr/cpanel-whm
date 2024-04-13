@@ -53,3 +53,29 @@ export interface AccountCreated {
         a: null | string;
     }[];
 }
+
+export interface Package {
+    name: string;
+    max_passenger_apps: number;
+    max_team_users: number;
+    quota: string;
+    cpmod: string;
+    has_shell: string;
+    maxaddons: number;
+    bwlimit: string;
+    maxlst: string;
+    maxftp: string;
+    max_emailacct_quota: string;
+    maxpark: number;
+    max_email_per_hour: number;
+    digestauth: string;
+    ip: string;
+    maxsql: string;
+    lang: string;
+    maxpop: string;
+    max_defer_fail_percentage: number;
+    feature_list: string;
+    maxsub: string;
+    cgi: string;
+    package_extensions: string;
+}

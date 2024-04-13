@@ -4,3 +4,9 @@ export interface CreateAccount {
     password: string,
     plan: string
 }
+
+export interface CreatePackage {
+    name: string,
+    quota: string,
+    bwlimit: string,
+}
