@@ -1,2 +1,6 @@
 src
+demo
+gulpfile.js
 tsconfig.json
+tsd.json
+typings

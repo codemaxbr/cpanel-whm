@@ -1,10 +1,174 @@
-import API from "./api";
-import WHMOptions from "./interfaces/WHMOptions";
-import {
-    Account, AccountCreated, Package
-} from "./interfaces/Schemas";
-import {CreateAccount, CreatePackage} from "./interfaces/Payloads";
-import {includes} from "lodash";
+import * as http from 'request';
+import { merge } from 'lodash';
+
+http.defaults({
+    encoding: 'utf-8',
+    json: true
+});
+
+export interface Account {
+    user: string;
+    plan: string;
+    outgoing_mail_suspended: number;
+    backup: number;
+    maxftp: string;
+    max_emailacct_quota: string;
+    maxsql: string;
+    uid: string;
+    theme: string;
+    legacy_backup: number;
+    maxpop: string;
+    ipv6: any[]; // Se for uma matriz de valores, você pode deixar como any[] ou especificar o tipo correto
+    max_defer_fail_percentage: string;
+    domain: string;
+    ip: string;
+    suspendreason: string;
+    diskused: string;
+    min_defer_fail_to_trigger_protection: string;
+    temporary: number;
+    is_locked: number;
+    maxaddons: string;
+    maxparked: string;
+    startdate: string;
+    child_nodes: any[]; // Se for uma matriz de valores, você pode deixar como any[] ou especificar o tipo correto
+    unix_startdate: number;
+    maxsub: string;
+    suspended: number;
+    inodeslimit: string;
+    maxlst: string;
+    partition: string;
+    email: string;
+    outgoing_mail_hold: number;
+    has_backup: number;
+    disklimit: string;
+    inodesused: number;
+    max_email_per_hour: string;
+    shell: string;
+    mailbox_format: string;
+    suspendtime: number;
+    owner: string;
+}
+
+export interface AccountCreated {
+    domain: string;
+    ip: string;
+    package: string;
+    username: string;
+    password: string;
+    nameservers: {
+        nameserver: string;
+        entry: null | string;
+        a: null | string;
+    }[];
+}
+
+export interface Package {
+    name: string;
+    max_passenger_apps: number;
+    max_team_users: number;
+    quota: string;
+    cpmod: string;
+    has_shell: string;
+    maxaddons: number;
+    bwlimit: string;
+    maxlst: string;
+    maxftp: string;
+    max_emailacct_quota: string;
+    maxpark: number;
+    max_email_per_hour: number;
+    digestauth: string;
+    ip: string;
+    maxsql: string;
+    lang: string;
+    maxpop: string;
+    max_defer_fail_percentage: number;
+    feature_list: string;
+    maxsub: string;
+    cgi: string;
+    package_extensions: string;
+}
+
+export interface CreateAccount {
+    username: string,
+    domain: string,
+    password: string,
+    plan: string
+}
+
+export interface CreatePackage {
+    name: string,
+    quota: string,
+    bwlimit: string,
+}
+
+export interface WHMOptions {
+    apiType?: string
+    version?: number
+    serverUrl: string
+    username: string
+    remoteAccessKey: string
+}
+
+class Utils {
+    static qsToObject(querystring: string): any {
+        let object = {};
+        let splitQs: any = querystring.split('&');
+        splitQs.forEach(
+            item => {
+                item = item.split('=');
+                object[item[0]] = item[1];
+            }
+        );
+        return object;
+    }
+
+    static objectToQs(object: any): string {
+        let qs: string = '';
+        for(let prop in object){
+            if(qs.length > 0) qs += '&';
+            qs += encodeURIComponent(prop) + '=' + encodeURIComponent(object[prop]);
+        }
+        return qs;
+    }
+}
+
+class API {
+    private defaultOptions: any = {
+        apiType: 'json-api',
+        version: 1
+    }
+
+    constructor(private options: WHMOptions) {
+        merge(this.options, this.defaultOptions)
+    }
+
+    get(action: string, query?: string | any): Promise<any> {
+        if (query && typeof query != "string") query = Utils.objectToQs(query)
+
+        let requestOptions: any = {
+            url: this.options.serverUrl +'/'+ this.options.apiType +'/'+ action +'?api.version='+ this.options.version +'&'+ query,
+            headers: {
+                Authorization: 'WHM ' + this.options.username + ':' + this.options.remoteAccessKey
+            }
+        }
+
+        return new Promise<any>((resolve, reject) => {
+            http.get(requestOptions, (err, res, body) => {
+                if (body) {
+                    body = JSON.parse(body)
+                }
+
+                if (err) {
+                    reject({error: err.message})
+                } else if (!body.metadata?.result) {
+                    reject({error: body.metadata.reason})
+                } else {
+                    resolve(body)
+                }
+            })
+        })
+    }
+}
 
 export class Client {
     public api: API

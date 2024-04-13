@@ -1,14 +1,23 @@
 {
   "name": "cpanel-whm",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "description": "SDK cPanel/WHM for Node.js",
-  "main": "dist/client.ts",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "github.com/codemaxbr/cpanel-whm",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codemaxbr/cpanel-whm.git"
+  },
   "author": "Lucas Maia <lucas.codemax@gmail.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codemaxbr/cpanel-whm/issues"
+  },
+  "homepage": "https://github.com/codemaxbr/cpanel-whm#readme",
   "dependencies": {
     "lodash": "^4.17.21",
     "request": "^2.88.2",
@@ -18,7 +27,6 @@
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.12.7",
     "@types/request": "^2.48.12",
-    "nodemon": "^3.1.0",
     "typescript": "^5.4.5"
   }
 }
